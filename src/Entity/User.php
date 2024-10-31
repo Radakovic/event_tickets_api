@@ -15,15 +15,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public function __construct(
-        #[ORM\Column]
+        #[ORM\Column(type: 'string', length: 255)]
         private string $firstName,
-        #[ORM\Column]
+        #[ORM\Column(type: 'string', length: 255)]
         private string $lastName,
         #[ORM\Column(length: 180)]
         private string $email,
-        #[ORM\Column]
+        #[ORM\Column(type: 'json')]
         private array $roles,
-        #[ORM\Column]
+        #[ORM\Column(type: 'string')]
         private string $password,
         #[ORM\Id]
         #[ORM\Column(type: 'uuid', unique: true)]
