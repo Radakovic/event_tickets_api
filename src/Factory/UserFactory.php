@@ -16,40 +16,20 @@ final class UserFactory extends PersistentProxyObjectFactory
         'ROLE_USER',
     ];
 
-    public function __construct(
-        private readonly UserPasswordHasherInterface $passwordHasher,
-    ){
-    }
-
     public static function class(): string
     {
         return User::class;
     }
     protected function defaults(): array|callable
     {
-        $email = self::faker()->email();
-        $firstName = self::faker()->firstName();
-        $lastName = self::faker()->lastName();
         $roles[] = self::faker()->randomElement(self::ROLES);
-        $plainPassword = 'secret';
 
-        $user = new User(
-            firstName: $firstName,
-            lastName: $lastName,
-            email: $email,
-            roles: $roles,
-        );
-
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            $plainPassword
-        );
-
+        // Password for all generated users is `secret`
         return [
-            'email' => $email,
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-            'password' => $hashedPassword,
+            'email' => self::faker()->email(),
+            'firstName' => self::faker()->firstName(),
+            'lastName' => self::faker()->lastName(),
+            'password' => '$2y$13$h8C3aoTWltYiyp2q0uzuC.1db5RGYABX76wC3j4c5M4S1DK85iRT6',
             'roles' => $roles,
         ];
     }
