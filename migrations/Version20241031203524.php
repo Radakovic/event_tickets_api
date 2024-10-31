@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20241031195115 extends AbstractMigration
+final class Version20241031203524 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -19,8 +19,8 @@ final class Version20241031195115 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('
-            CREATE TABLE `user` (id CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\',
+        $this->addSql(
+            'CREATE TABLE `user` (id CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\',
             first_name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NOT NULL,
             email VARCHAR(180) NOT NULL,
