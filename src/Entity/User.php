@@ -2,8 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\CreateAndUpdatedAtTrait;
+use App\Entity\Traits\DeletedAtTrait;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -12,8 +17,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', hardDelete: false)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use CreateAndUpdatedAtTrait;
     public function __construct(
         #[ORM\Column(type: 'string', length: 255)]
         private string $firstName,
@@ -23,6 +30,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         private string $email,
         #[ORM\Column(type: 'json')]
         private array $roles,
+        #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+        private ?DateTimeImmutable $deletedAt = null,
         #[ORM\Column(type: 'string')]
         private ?string $password = null,
         #[ORM\Id]
@@ -111,5 +120,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
+    }
+    public function getDeletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): void
+    {
+        $this->deletedAt = $deletedAt;
     }
 }
