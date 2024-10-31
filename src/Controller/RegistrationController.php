@@ -2,19 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\UserRegistrationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Register new user to application
+ */
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly UserRegistrationServiceInterface $userRegistrationService
     ){
     }
 
@@ -26,23 +26,10 @@ class RegistrationController extends AbstractController
     public function register(Request $request): Response
     {
         $userData = $request->toArray();
-        $roles = $userData['roles'] ?? ['ROLE_USER'];
 
-        $user = new User(
-            firstName: $userData['firstName'],
-            lastName: $userData['lastName'],
-            email: $userData['email'],
-            roles: $roles,
-        );
+        $this->userRegistrationService->createUser($userData);
 
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            $userData['password']
-        );
-        $user->setPassword($hashedPassword);
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->userRegistrationService->welcomeEmail();
 
         return new Response(status: Response::HTTP_CREATED);
     }
