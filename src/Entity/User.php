@@ -24,7 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         #[ORM\Column(type: 'json')]
         private array $roles,
         #[ORM\Column(type: 'string')]
-        private string $password,
+        private ?string $password = null,
         #[ORM\Id]
         #[ORM\Column(type: 'uuid', unique: true)]
         private ?UuidInterface $id = null,
@@ -72,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): void
     {
+        if ($roles === []) {
+            $roles[] = 'ROLE_USER';
+        }
         $this->roles = $roles;
     }
     /**
