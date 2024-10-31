@@ -6,6 +6,7 @@
         <cache>
           <versions>
             <info id="Local/vendor/autoload.php" version="9.6.21" />
+            <info id="interpreter-b4bcd9c9-326b-4d31-bccf-dfc9d9f17a3d" version="9.6.21" />
           </versions>
         </cache>
       </tool>

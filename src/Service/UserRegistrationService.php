@@ -16,6 +16,9 @@ class UserRegistrationService implements UserRegistrationServiceInterface
     ){
     }
 
+    /**
+     * @inheritDoc
+     */
     public function createUser(array $userData): void
     {
         $roles = $userData['roles'] ?? ['ROLE_USER'];

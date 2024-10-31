@@ -21,8 +21,8 @@ class RegistrationController extends AbstractController
     #[Route(
         path: '/registration',
         name: 'registration',
-        methods: ['POST'])
-    ]
+        methods: ['POST']
+    )]
     public function register(Request $request): Response
     {
         $userData = $request->toArray();
