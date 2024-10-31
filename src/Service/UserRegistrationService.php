@@ -8,11 +8,11 @@ use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsAlias(id: UserRegistrationServiceInterface::class)]
-readonly class UserRegistrationService implements UserRegistrationServiceInterface
+class UserRegistrationService implements UserRegistrationServiceInterface
 {
     public function __construct(
-        private UserPasswordHasherInterface $passwordHasher,
-        private EntityManagerInterface      $entityManager,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly EntityManagerInterface      $entityManager,
     ){
     }
 
