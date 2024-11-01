@@ -3,11 +3,16 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Traits\CreateAndUpdatedAtTrait;
 use App\Enum\EventEnum;
 use App\Repository\EventRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -18,8 +23,10 @@ use Symfony\Component\Serializer\Attribute\Groups;
     denormalizationContext: ['groups' => ['write_event']],
     //security: "is_granted('ROLE_ADMIN')",
 )]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', hardDelete: false)]
 class Event
 {
+    use CreateAndUpdatedAtTrait;
 
     public function __construct(
         #[ORM\Column(length: 255)]
@@ -51,6 +58,9 @@ class Event
         #[Groups(['get_event', 'write_event'])]
         private ?Organizer $organizer = null,
 
+//        #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'event', orphanRemoval: true)]
+//        private ?Collection $tickets = null,
+
         #[ORM\Column(type: Types::TEXT, nullable: true)]
         #[Groups(['get_event', 'write_event', 'get_organizer_events'])]
         private ?string $description = null,
@@ -59,8 +69,12 @@ class Event
         #[ORM\Column(type: 'uuid', unique: true)]
         #[Groups(['get_event', 'write_event', 'get_organizer_events'])]
         private ?UuidInterface $id = null,
+
+        #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+        private ?DateTimeImmutable $deletedAt = null,
     ) {
         $this->id = $id ?? Uuid::uuid4();
+        //$this->tickets = new ArrayCollection();
     }
 
     public function getId(): UuidInterface
@@ -130,5 +144,34 @@ class Event
     public function setCountry(string $country): void
     {
         $this->country = $country;
+    }
+
+//    /**
+//     * @return Collection<int, Ticket>
+//     */
+//    public function getTickets(): Collection
+//    {
+//        return $this->tickets;
+//    }
+//    public function addTicket(Ticket $ticket): void
+//    {
+//        if (!$this->tickets->contains($ticket)) {
+//            $this->tickets->add($ticket);
+//            $ticket->setEvent($this);
+//        }
+//    }
+//    public function removeTicket(Ticket $ticket): void
+//    {
+//        if ($this->tickets->contains($ticket)) {
+//            $this->tickets->removeElement($ticket);
+//        }
+//    }
+    public function getDeletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): void
+    {
+        $this->deletedAt = $deletedAt;
     }
 }
