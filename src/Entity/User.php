@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Traits\CreateAndUpdatedAtTrait;
-use App\Entity\Traits\DeletedAtTrait;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
@@ -13,6 +12,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -23,17 +23,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use CreateAndUpdatedAtTrait;
     public function __construct(
         #[ORM\Column(type: 'string', length: 255)]
+        #[Assert\NotBlank]
+        #[Assert\Length(min: 3, max: 255)]
         private string $firstName,
+
         #[ORM\Column(type: 'string', length: 255)]
+        #[Assert\NotBlank]
+        #[Assert\Length(min: 3, max: 255)]
         private string $lastName,
+
         #[ORM\Column(type: 'string', length: 180, unique: true)]
+        #[Assert\NotBlank]
+        #[Assert\Length(max: 255)]
+        #[Assert\Email]
         private string $email,
+
         #[ORM\Column(type: 'json')]
         private array $roles,
+
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
         private ?DateTimeImmutable $deletedAt = null,
+
         #[ORM\Column(type: 'string')]
+        #[Assert\NotBlank]
+        #[Assert\Length(min: 3, max: 20)]
         private ?string $password = null,
+
         #[ORM\Id]
         #[ORM\Column(type: 'uuid', unique: true)]
         private ?UuidInterface $id = null,

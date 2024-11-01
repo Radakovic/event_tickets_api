@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Service\UserRegistrationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -43,8 +44,14 @@ class RegistrationController extends AbstractController
         $errors = $this->validator->validate($user);
 
         if (count($errors) > 0) {
-            $errorsString = (string)$errors;
-            return new Response($errorsString);
+            $errorsData = [];
+            foreach ($errors as $key => $error) {
+                $errorsData[$key] = [
+                    'message' => $error->getMessage(),
+                    'property' => $error->getPropertyPath(),
+                ];
+            }
+            return new JsonResponse($errorsData, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $this->userRegistrationService->createUser($user);
