@@ -8,6 +8,8 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        mapping_types:
+            enum: string
         types:
             event_type: App\Doctrine\EnumType\EventEnumType
     orm:

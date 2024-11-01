@@ -24,10 +24,16 @@ class Event
         private DateTimeInterface $date,
 
         #[ORM\Column(type: 'event_type')]
-        private EventEnum $type,
+        private EventEnum         $type,
 
         #[ORM\Column(length: 255)]
-        private string            $location,
+        private string $city,
+
+        #[ORM\Column(length: 255)]
+        private string $country,
+
+        #[ORM\Column(length: 255)]
+        private string            $address,
 
         #[ORM\ManyToOne(inversedBy: 'events')]
         #[ORM\JoinColumn(nullable: false)]
@@ -38,7 +44,7 @@ class Event
 
         #[ORM\Id]
         #[ORM\Column(type: 'uuid', unique: true)]
-        private ?UuidInterface $id = null,
+        private ?UuidInterface    $id = null,
     ) {
         $this->id = $id ?? Uuid::uuid4();
     }
@@ -79,13 +85,13 @@ class Event
     {
         $this->type = $type;
     }
-    public function getLocation(): string
+    public function getAddress(): string
     {
-        return $this->location;
+        return $this->address;
     }
-    public function setLocation(string $location): void
+    public function setAddress(string $address): void
     {
-        $this->location = $location;
+        $this->address = $address;
     }
     public function getOrganizer(): ?Organizer
     {
@@ -94,5 +100,21 @@ class Event
     public function setOrganizer(Organizer $organizer): void
     {
         $this->organizer = $organizer;
+    }
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+    public function setCity(string $city): void
+    {
+        $this->city = $city;
+    }
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+    public function setCountry(string $country): void
+    {
+        $this->country = $country;
     }
 }

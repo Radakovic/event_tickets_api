@@ -25,7 +25,9 @@ final class Version20241101103647 extends AbstractMigration
             name VARCHAR(255) NOT NULL,
             date DATETIME NOT NULL,
             type ENUM(\'CARNIVAL\', \'FAIR\', \'CONCERT\', \'FESTIVAL\', \'PARADE\', \'THEATER_PERFORMANCE\') NOT NULL COMMENT \'(DC2Type:event_type)\',
-            location VARCHAR(255) NOT NULL,
+            city VARCHAR(255) NOT NULL,
+            country VARCHAR(255) NOT NULL,
+            address VARCHAR(255) NOT NULL,
             description LONGTEXT DEFAULT NULL,
             INDEX IDX_3BAE0AA7876C4DDA (organizer_id),
             PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB'
