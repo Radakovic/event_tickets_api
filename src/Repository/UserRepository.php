@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -31,5 +32,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function findAllManagerIds(): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT * FROM user WHERE JSON_CONTAINS(roles, :role) = 1';
+
+        $stmt = $connection->prepare($sql);
+        $stmt->bindValue('role', json_encode('ROLE_MANAGER'));
+        return $stmt->executeQuery()->fetchFirstColumn();
     }
 }

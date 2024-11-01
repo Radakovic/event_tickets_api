@@ -13,6 +13,7 @@ final class UserFactory extends PersistentProxyObjectFactory
 {
     private const ROLES = [
         'ROLE_ADMIN',
+        'ROLE_MANAGER',
         'ROLE_USER',
     ];
 

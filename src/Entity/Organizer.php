@@ -11,6 +11,7 @@ use App\Entity\Traits\CreateAndUpdatedAtTrait;
 use App\Repository\OrganizerRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
@@ -46,6 +47,10 @@ class Organizer
         #[ORM\Column(length: 255)]
         #[Groups(['get_organizer', 'write_organizer'])]
         private string $address,
+
+        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizers')]
+        #[JoinColumn(nullable: false)]
+        private ?User $manager = null,
 
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
         private ?DateTimeImmutable $deletedAt = null,
@@ -92,5 +97,13 @@ class Organizer
     public function setDeletedAt(?DateTimeImmutable $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
+    }
+    public function getManager(): User
+    {
+        return $this->manager;
+    }
+    public function setManager(User $manager): void
+    {
+        $this->manager = $manager;
     }
 }

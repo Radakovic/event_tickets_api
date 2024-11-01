@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Traits\CreateAndUpdatedAtTrait;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -41,6 +43,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         #[ORM\Column(type: 'json')]
         private array $roles,
 
+        #[ORM\OneToMany(targetEntity: Organizer::class, mappedBy: 'manager')]
+        private ?Collection $organizers = null,
+
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
         private ?DateTimeImmutable $deletedAt = null,
 
@@ -54,6 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         private ?UuidInterface $id = null,
     ) {
         $this->id = $id ?? Uuid::uuid4();
+        $this->organizers = new ArrayCollection();
     }
 
     public function getId(): UuidInterface
@@ -140,9 +146,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->deletedAt;
     }
-
     public function setDeletedAt(?DateTimeImmutable $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
+    }
+    public function getOrganizers(): Collection
+    {
+        return $this->organizers;
+    }
+    public function addOrganizer(Organizer $organizer): void
+    {
+        if (!$this->organizers->contains($organizer)) {
+            $this->organizers->add($organizer);
+            $organizer->setManager($this);
+        }
+    }
+    public function removeOrganizer(Organizer $organizer): void
+    {
+        if ($this->organizers->contains($organizer)) {
+            $this->organizers->removeElement($organizer);
+        }
     }
 }
