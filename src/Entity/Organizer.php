@@ -54,7 +54,7 @@ class Organizer
          * @var Collection<int, Event>
          */
         #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer', orphanRemoval: true)]
-        private Collection $events,
+        private ?Collection $events = null,
 
         #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizers')]
         #[JoinColumn(nullable: false)]

@@ -27,25 +27,6 @@ class OrganizerFixtures extends Fixture implements DependentFixtureInterface
                 'manager' => $organizerManager,
             ]);
         }
-
-//        $organizerManager = $repository->find($managerIds[array_rand($managerIds)]);
-//
-//
-//
-//
-//
-//        OrganizerFactory::createMany(
-//            5,
-//            static function () use ($repository) {
-//                $managerIds = $repository->findAllManagerIds();
-//                $organizerManager = $repository->findBy(
-//                    [
-//                        'id' => $managerIds,
-//                    ]
-//                );
-//                return ['manager' => $organizerManager];
-//            }
-//        );
     }
 
     public function getDependencies()

@@ -18,13 +18,13 @@ class Event
 
     public function __construct(
         #[ORM\Column(length: 255)]
-        private string            $name,
+        private string $name,
 
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
         private DateTimeInterface $date,
 
         #[ORM\Column(type: 'event_type')]
-        private EventEnum         $type,
+        private string $type,
 
         #[ORM\Column(length: 255)]
         private string $city,
@@ -33,14 +33,14 @@ class Event
         private string $country,
 
         #[ORM\Column(length: 255)]
-        private string            $address,
+        private string $address,
 
         #[ORM\ManyToOne(inversedBy: 'events')]
         #[ORM\JoinColumn(nullable: false)]
-        private Organizer         $organizer,
+        private ?Organizer $organizer = null,
 
         #[ORM\Column(type: Types::TEXT, nullable: true)]
-        private ?string           $description = null,
+        private ?string $description = null,
 
         #[ORM\Id]
         #[ORM\Column(type: 'uuid', unique: true)]
@@ -77,11 +77,11 @@ class Event
     {
         $this->description = $description;
     }
-    public function getType(): EventEnum
+    public function getType(): string
     {
         return $this->type;
     }
-    public function setType(EventEnum $type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
