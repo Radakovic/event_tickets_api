@@ -24,14 +24,16 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', hardDelete: false)]
 #[ApiResource(
     operations: [
-        new Get(),
+        new Get(
+            normalizationContext: ['groups' => ['get_organizer_events']],
+        ),
         new GetCollection(),
         new Patch(),
         new Post(),
     ],
     normalizationContext: ['groups' => ['get_organizer']],
     denormalizationContext: ['groups' => ['write_organizer']],
-    security: "is_granted('ROLE_ADMIN')",
+    //security: "is_granted('ROLE_ADMIN')",
 )]
 class Organizer
 {
@@ -39,7 +41,7 @@ class Organizer
 
     public function __construct(
         #[ORM\Column(length: 255)]
-        #[Groups(['get_organizer', 'write_organizer'])]
+        #[Groups(['get_organizer', 'write_organizer', 'get_event', 'get_organizer_events'])]
         private string $name,
 
         #[ORM\Column(length: 255)]
@@ -54,6 +56,7 @@ class Organizer
          * @var Collection<int, Event>
          */
         #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer', orphanRemoval: true)]
+        #[Groups(['get_organizer_events'])]
         private ?Collection $events = null,
 
         #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizers')]
@@ -65,6 +68,7 @@ class Organizer
 
         #[ORM\Id]
         #[ORM\Column(type: 'uuid', unique: true)]
+        #[Groups(['get_event', 'get_organizer_events'])]
         private ?UuidInterface $id = null,
     ) {
         $this->id = $id ?? Uuid::uuid4();
