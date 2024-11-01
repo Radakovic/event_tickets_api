@@ -12,6 +12,7 @@ doctrine:
             enum: string
         types:
             event_type: App\Doctrine\EnumType\EventEnumType
+            ticket_type: App\Doctrine\EnumType\TicketEnumType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
