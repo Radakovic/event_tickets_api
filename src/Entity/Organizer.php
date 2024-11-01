@@ -10,6 +10,8 @@ use ApiPlatform\Metadata\Post;
 use App\Entity\Traits\CreateAndUpdatedAtTrait;
 use App\Repository\OrganizerRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -48,6 +50,12 @@ class Organizer
         #[Groups(['get_organizer', 'write_organizer'])]
         private string $address,
 
+        /**
+         * @var Collection<int, Event>
+         */
+        #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer', orphanRemoval: true)]
+        private Collection $events,
+
         #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizers')]
         #[JoinColumn(nullable: false)]
         private ?User $manager = null,
@@ -60,6 +68,7 @@ class Organizer
         private ?UuidInterface $id = null,
     ) {
         $this->id = $id ?? Uuid::uuid4();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): UuidInterface
@@ -105,5 +114,26 @@ class Organizer
     public function setManager(User $manager): void
     {
         $this->manager = $manager;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+    public function addEvent(Event $event): void
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setOrganizer($this);
+        }
+    }
+    public function removeEvent(Event $event): void
+    {
+        if ($this->events->removeElement($event) && $event->getOrganizer() === $this) {
+            $event->setOrganizer(null);
+        }
     }
 }
