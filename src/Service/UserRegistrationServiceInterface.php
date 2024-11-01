@@ -8,9 +8,8 @@ interface UserRegistrationServiceInterface
 {
     /**
      * Create new {@see User} from given data.
-     * @param array<string, string> $userData
      */
-    public function createUser(array $userData): void;
+    public function createUser(User $user): void;
 
     public function welcomeEmail(): void;
 }

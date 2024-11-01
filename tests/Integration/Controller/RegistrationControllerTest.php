@@ -30,7 +30,7 @@ class RegistrationControllerTest extends WebTestCase
                     'firstName' => 'Pera',
                     'lastName' => 'Mitic',
                     'email' => 'pera_davitelj@gmail.com',
-                    'password' => 'davitel',
+                    'password' => 'davitelj',
                 ],
                 JSON_THROW_ON_ERROR
             ));
