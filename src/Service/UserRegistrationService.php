@@ -21,15 +21,6 @@ class UserRegistrationService implements UserRegistrationServiceInterface
      */
     public function createUser(User $user): void
     {
-//        $roles = $userData['roles'] ?? ['ROLE_USER'];
-//
-//        $user = new User(
-//            firstName: $userData['firstName'],
-//            lastName: $userData['lastName'],
-//            email: $userData['email'],
-//            roles: $roles,
-//        );
-
         $hashedPassword = $this->passwordHasher->hashPassword(
             $user,
             $user->getPassword()
