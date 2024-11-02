@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Traits\CreateAndUpdatedAtTrait;
@@ -37,7 +38,7 @@ class Ticket
     public function __construct(
         #[ORM\Column(type: 'integer')]
         #[Groups(['get_ticket', 'write_ticket', 'get_event_ticket'])]
-        private float $price,
+        private int $price,
 
         #[ORM\Column(type: 'ticket_type')]
         #[Groups(['get_ticket', 'write_ticket', 'get_event_ticket'])]
@@ -75,9 +76,9 @@ class Ticket
     {
         $this->type = $type;
     }
-    public function getPrice(): float
+    public function getPrice(): int
     {
-        return $this->price / 100;
+        return $this->price;
     }
     public function setPrice(int $price): void
     {
