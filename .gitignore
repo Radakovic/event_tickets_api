@@ -13,16 +13,11 @@
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-cobertura.xml
-junit.xml
-coverage.html
-event_tickets_api_code_coverage.xml
-###< symfony/phpunit-bridge ###
-
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
+cobertura.xml
+junit.xml
+COVERAGE-HTML
+coverage-clover.xml
 ###< phpunit/phpunit ###
