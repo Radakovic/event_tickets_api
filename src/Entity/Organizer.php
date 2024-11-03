@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Traits\CreateAndUpdatedAtTrait;
 use App\Repository\OrganizerRepository;
-use DateTimeImmutable;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -30,6 +31,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new GetCollection(),
         new Patch(),
         new Post(),
+        new Delete(),
     ],
     normalizationContext: ['groups' => ['get_organizer']],
     denormalizationContext: ['groups' => ['write_organizer']],
@@ -61,14 +63,15 @@ class Organizer
 
         #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizers')]
         #[JoinColumn(nullable: false)]
+        #[Groups(['get_organizer', 'write_organizer'])]
         private ?User $manager = null,
 
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-        private ?DateTimeImmutable $deletedAt = null,
+        private ?DateTime $deletedAt = null,
 
         #[ORM\Id]
         #[ORM\Column(type: 'uuid', unique: true)]
-        #[Groups(['get_event', 'get_organizer_events'])]
+        #[Groups(['get_organizer', 'get_event', 'get_organizer_events'])]
         private ?UuidInterface $id = null,
     ) {
         $this->id = $id ?? Uuid::uuid4();
@@ -103,11 +106,11 @@ class Organizer
     {
         $this->address = $address;
     }
-    public function getDeletedAt(): ?DateTimeImmutable
+    public function getDeletedAt(): ?DateTime
     {
         return $this->deletedAt;
     }
-    public function setDeletedAt(?DateTimeImmutable $deletedAt): void
+    public function setDeletedAt(?DateTime $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
     }

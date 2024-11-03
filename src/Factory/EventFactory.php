@@ -29,7 +29,7 @@ final class EventFactory extends PersistentProxyObjectFactory
             'address' => self::faker()->address(),
             'city' => self::faker()->city(),
             'country' => self::faker()->country(),
-            'date' => self::faker()->dateTime(),
+            'date' => self::faker()->dateTimeBetween('-3 days', '+3 months'),
             'name' => self::faker()->sentence(),
             'type' => self::faker()->randomElement($eventTypes),
             'description' => self::faker()->sentences(3, true),

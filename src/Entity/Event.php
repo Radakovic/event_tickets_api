@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -35,9 +38,12 @@ use Symfony\Component\Serializer\Attribute\Groups;
     ],
     normalizationContext: ['groups' => ['get_event'], 'skip_null_values' => false],
     denormalizationContext: ['groups' => ['write_event']],
+    order: ['date' => 'ASC'],
     //security: "is_granted('ROLE_ADMIN')",
 )]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', hardDelete: false)]
+#[ApiFilter(OrderFilter::class, properties: ['date'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
 class Event
 {
     use CreateAndUpdatedAtTrait;

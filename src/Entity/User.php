@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Traits\CreateAndUpdatedAtTrait;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -20,6 +22,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', hardDelete: false)]
+#[ApiResource(
+    operations: [
+        new GetCollection()
+    ],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use CreateAndUpdatedAtTrait;
