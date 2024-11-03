@@ -51,7 +51,9 @@ class RegistrationController extends AbstractController
                     'property' => $error->getPropertyPath(),
                 ];
             }
-            return new JsonResponse($errorsData, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return new JsonResponse(
+                data: $errorsData,
+                status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $this->userRegistrationService->createUser($user);

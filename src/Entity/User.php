@@ -126,6 +126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
     }
     /**
+     * @codeCoverageIgnore
      * @see UserInterface
      */
     public function eraseCredentials(): void
