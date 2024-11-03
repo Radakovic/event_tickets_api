@@ -29,15 +29,23 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['get_organizer_events']],
+            //security: "is_granted('ROLE_ADMIN') or is_granted('view', object)",
         ),
-        new GetCollection(),
-        new Patch(),
-        new Post(),
-        new Delete(),
+        new GetCollection(
+            //security: "is_granted('ROLE_ADMIN')",
+        ),
+        new Patch(
+            //security: "is_granted('ROLE_ADMIN') or is_granted('view', object)",
+        ),
+        new Post(
+            //security: "is_granted('ROLE_ADMIN') or is_granted('view', object)",
+        ),
+        new Delete(
+            //security: "is_granted('ROLE_ADMIN') or is_granted('view', object)",
+        ),
     ],
     normalizationContext: ['groups' => ['get_organizer']],
     denormalizationContext: ['groups' => ['write_organizer']],
-    //security: "is_granted('ROLE_ADMIN')",
 )]
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
 class Organizer
