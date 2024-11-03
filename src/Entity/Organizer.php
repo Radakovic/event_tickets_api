@@ -139,8 +139,8 @@ class Organizer
     }
     public function removeEvent(Event $event): void
     {
-        if ($this->events->removeElement($event) && $event->getOrganizer() === $this) {
-            $event->setOrganizer(null);
+        if ($this->events->contains($event)) {
+            $this->events->removeElement($event);
         }
     }
 }
