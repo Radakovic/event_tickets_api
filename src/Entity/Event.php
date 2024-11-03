@@ -14,7 +14,6 @@ use ApiPlatform\Metadata\Post;
 use App\Entity\Traits\CreateAndUpdatedAtTrait;
 use App\Repository\EventRepository;
 use DateTime;
-use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

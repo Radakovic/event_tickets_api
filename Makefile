@@ -1,13 +1,13 @@
-migrate:
+migrations:
 	@docker compose exec php bin/console doctrine:migrations:migrate -n
 
-migrate_prev:
+migrations_prev:
 	@docker compose exec php bin/console doctrine:migration:migrate -n prev
 
-run-fixtures: migrate
+run-fixtures: migrations
 	@docker compose exec php bin/console doctrine:fixture:load -n
 
-schema-validate: migrate
+schema-validate: migrations
 	@SQL=$$(docker compose exec php bin/console doctrine:schema:update --dump-sql); \
 	if [ "$$SQL" != "DROP TABLE doctrine_migration_versions;" ]; then \
 		docker compose exec php bin/console doctrine:schema:validate -v; \

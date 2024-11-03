@@ -10,5 +10,3 @@ api_platform:
     collection:
         pagination:
             enabled_parameter_name: pagination
-            #client_enabled: true
-
