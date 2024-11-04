@@ -12,6 +12,16 @@ else
     echo "Composer vendor directory already exists and is not empty."
 fi
 
+# Install Bootstrap and other assets, only if assets/vendor folder is empty or does not exists
+if [ ! -d "assets/vendor" ] || [ -z "$(ls -A assets/vendor)" ]; then
+    echo "######################################"
+    echo "Installing Assets dependencies..."
+    echo "######################################"
+    php bin/console importmap:install
+else
+    echo "Assets vendor directory already exists and is not empty."
+fi
+
 if [ ! -d "config/jwt" ] || [ -z "$(ls -A config/jwt)" ]; then
     echo "######################################"
     echo "Generate the SSL keys"
