@@ -10,7 +10,7 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        UserFactory::createMany(28);
+        UserFactory::createMany(48);
         UserFactory::createOne([
             'firstname' => 'John',
             'lastname' => 'Doe',
