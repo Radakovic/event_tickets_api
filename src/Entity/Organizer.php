@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrganizerRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', hardDelete: false)]
@@ -55,14 +56,17 @@ class Organizer
     public function __construct(
         #[ORM\Column(length: 255)]
         #[Groups(['get_organizer', 'write_organizer', 'get_event', 'get_organizer_events'])]
+        #[Assert\NotBlank]
         private string $name,
 
         #[ORM\Column(length: 255)]
         #[Groups(['get_organizer', 'write_organizer'])]
+        #[Assert\NotBlank]
         private string $city,
 
         #[ORM\Column(length: 255)]
         #[Groups(['get_organizer', 'write_organizer'])]
+        #[Assert\NotBlank]
         private string $address,
 
         /**
@@ -75,6 +79,7 @@ class Organizer
         #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizers')]
         #[JoinColumn(nullable: false)]
         #[Groups(['get_organizer', 'write_organizer'])]
+        #[Assert\NotBlank]
         private ?User $manager = null,
 
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
