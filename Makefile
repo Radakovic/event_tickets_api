@@ -1,7 +1,13 @@
+run:
+	@docker compose up
+stop:
+	@docker compose down
+down:
+	@docker compose down --remove-orphans --volumes
 migrations:
 	@docker compose exec php bin/console doctrine:migrations:migrate -n
 
-migrations_prev:
+migrations-prev:
 	@docker compose exec php bin/console doctrine:migration:migrate -n prev
 
 run-fixtures: migrations

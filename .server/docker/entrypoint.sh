@@ -11,23 +11,14 @@ if [ ! -d "vendor" ] || [ -z "$(ls -A vendor)" ]; then
 else
     echo "Composer vendor directory already exists and is not empty."
 fi
-# Install Bootstrap and other assets, only if assets/vendor folder is empty or does not exists
-if [ ! -d "assets/vendor" ] || [ -z "$(ls -A assets/vendor)" ]; then
+
+if [ ! -d "config/jwt" ] || [ -z "$(ls -A config/jwt)" ]; then
     echo "######################################"
-    echo "Installing Assets dependencies..."
+    echo "Generate the SSL keys"
     echo "######################################"
-    php bin/console importmap:install
+    php bin/console lexik:jwt:generate-keypair
 else
-    echo "Assets vendor directory already exists and is not empty."
-fi
-# Install Sonata Admin assets if public/assets folder is empty or does not exists
-if [ ! -d "public/assets" ] || [ -z "$(ls -A public/assets)" ]; then
-    echo "######################################"
-    echo "Installing Sonata Admin Assets ..."
-    echo "######################################"
-    php bin/console asset-map:compile
-else
-    echo "Sonata admin assets already installed."
+    echo "Key are already generated."
 fi
 
     echo "######################################"
