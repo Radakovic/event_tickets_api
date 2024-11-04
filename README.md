@@ -56,9 +56,9 @@ Access to Swagger documentation: `http://localhost:8081/api/docs`
 - `make test` run all PHPUnit tests
 - `make test` run tests with coverage
 
-## 💡 Database access
+## 💡 Database access top secret ;-)
 
-Because of short period given for task these features are not finished or maybe not even started
-
-- FORMS does not exist or does not work
-- TEST does not exist - im very sad about this, but i simply didn't have time for that
+- MYSQL_HOST: 127.0.0.3:3306
+- MYSQL_PASSWORD: secret
+- MYSQL_USER: event_tickets_user
+- MYSQL_DATABASE: event_tickets
