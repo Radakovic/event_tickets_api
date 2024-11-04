@@ -7,13 +7,13 @@ down:
 migrations:
 	@docker compose exec php bin/console doctrine:migrations:migrate -n
 
-migrations-prev:
+migrations_prev:
 	@docker compose exec php bin/console doctrine:migration:migrate -n prev
 
-run-fixtures: migrations
+run_fixtures: migrations
 	@docker compose exec php bin/console doctrine:fixture:load -n
 
-schema-validate: migrations
+schema_validate: migrations
 	@SQL=$$(docker compose exec php bin/console doctrine:schema:update --dump-sql); \
 	if [ "$$SQL" != "DROP TABLE doctrine_migration_versions;" ]; then \
 		docker compose exec php bin/console doctrine:schema:validate -v; \
@@ -21,5 +21,5 @@ schema-validate: migrations
 
 test:
 	@docker compose exec php vendor/bin/paratest
-test-coverage:
+test_coverage:
 	@docker compose exec php vendor/bin/paratest -p 4 --runner=WrapperRunner --coverage-html=COVERAGE-HTML --log-junit=junit.xml --coverage-cobertura=cobertura.xml --coverage-clover=coverage-clover.xml
