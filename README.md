@@ -32,9 +32,9 @@ It is because execution of this command has couple stages:
 - Create fixture data
 
 
-After completing the installation, your application will run on this port: `http://localhost:8081/`
+After completing the installation, your application will run on this port: `http://localhost:8084/`
 
-Access to Swagger documentation: `http://localhost:8081/api/docs`
+Access to Swagger documentation: `http://localhost:8084/api/docs`
 
 ## ✨ Features
 
