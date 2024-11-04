@@ -6,35 +6,51 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Organizer;
 use App\Entity\User;
+use App\Factory\OrganizerFactory;
 use App\Factory\UserFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-class PostTest extends ApiTestCase
+class PatchTest extends ApiTestCase
 {
     use Factories;
     use ResetDatabase;
 
     private Client $client;
     private User $user;
+    private Organizer $organizer;
     private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
         $this->user = UserFactory::createOne();
+        $this->organizer = OrganizerFactory::createOne(
+            static function (): array {
+                return [
+                    'manager' => UserFactory::first()
+                ];
+            }
+        );
         $this->client = static::createClient();
         $this->entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
     }
 
-    public function testCreateOrganizer(): void
+    public function testPatchOrganizer(): void
     {
         $organizers = $this->entityManager->getRepository(Organizer::class)->findAll();
-        self::assertCount(0, $organizers);
+        self::assertCount(1, $organizers);
+        self::assertEquals($this->organizer->getName(), $organizers[0]->getName());
+        self::assertEquals($this->organizer->getCity(), $organizers[0]->getCity());
+        self::assertEquals($this->organizer->getAddress(), $organizers[0]->getAddress());
+        self::assertEquals(
+            $this->user->getId()->toString(),
+            $organizers[0]->getManager()->getId()->toString()
+        );
 
         $request = $this->makeRequest();
-        $this->makeApiCall($request);
-        self::assertResponseStatusCodeSame(201);
+        $this->makeApiCall($this->organizer->getId()->toString(), $request);
+        self::assertResponseStatusCodeSame(200);
 
         $currentOrganisers = $this->entityManager->getRepository(Organizer::class)->findAll();
         self::assertCount(1, $currentOrganisers);
@@ -52,15 +68,12 @@ class PostTest extends ApiTestCase
      */
     public function testValidationErrors(array $request, string $error_message, string $propertyPath): void
     {
-        $request['json']['manager'] = $this->getIriFromResource($this->user);
         $organizers = $this->entityManager->getRepository(Organizer::class)->findAll();
-        self::assertCount(0, $organizers);
+        self::assertCount(1, $organizers);
 
-        $this->makeApiCall($request);
+        $this->makeApiCall($this->organizer->getId()->toString(), $request);
         self::assertResponseStatusCodeSame(422);
 
-        $currentOrganisers = $this->entityManager->getRepository(Organizer::class)->findAll();
-        self::assertCount(0, $currentOrganisers);
         self::assertJsonContains([
             "@context" => "/api/contexts/ConstraintViolationList",
             "@type" => "ConstraintViolationList",
@@ -81,7 +94,7 @@ class PostTest extends ApiTestCase
             'validate_name' => [
                 '$request' => [
                     'headers' => [
-                        'Content-Type' => 'application/ld+json',
+                        'Content-Type' => 'application/merge-patch+json',
                     ],
                     'json' => [
                         'name' => '',
@@ -95,7 +108,7 @@ class PostTest extends ApiTestCase
             'validate_city' => [
                 '$request' => [
                     'headers' => [
-                        'Content-Type' => 'application/ld+json',
+                        'Content-Type' => 'application/merge-patch+json',
                     ],
                     'json' => [
                         'name' => 'Test Organizer',
@@ -109,7 +122,7 @@ class PostTest extends ApiTestCase
             'validate_address' => [
                 '$request' => [
                     'headers' => [
-                        'Content-Type' => 'application/ld+json',
+                        'Content-Type' => 'application/merge-patch+json',
                     ],
                     'json' => [
                         'name' => 'Test Organizer',
@@ -123,51 +136,11 @@ class PostTest extends ApiTestCase
         ];
     }
 
-    public function testManagerDoesNotExistsError(): void
-    {
-        $organizers = $this->entityManager->getRepository(Organizer::class)->findAll();
-        self::assertCount(0, $organizers);
-
-        $request = $this->makeRequest();
-        $request['json']['manager'] = '/api/users/aa57c6de-9aef-11ef-889b-af8b285eaada';
-        $this->makeApiCall($request);
-        self::assertResponseStatusCodeSame(400);
-
-        $currentOrganisers = $this->entityManager->getRepository(Organizer::class)->findAll();
-        self::assertCount(0, $currentOrganisers);
-        self::assertJsonContains([
-            "@context" => "/api/contexts/Error",
-            "@type" => "Error",
-            "status" => 400,
-            "detail" => 'Item not found for "/api/users/aa57c6de-9aef-11ef-889b-af8b285eaada".',
-        ]);
-    }
-
-    public function testEmptyIriError(): void
-    {
-        $organizers = $this->entityManager->getRepository(Organizer::class)->findAll();
-        self::assertCount(0, $organizers);
-
-        $request = $this->makeRequest();
-        $request['json']['manager'] = '';
-        $this->makeApiCall($request);
-        self::assertResponseStatusCodeSame(400);
-
-        $currentOrganisers = $this->entityManager->getRepository(Organizer::class)->findAll();
-        self::assertCount(0, $currentOrganisers);
-        self::assertJsonContains([
-            "@context" => "/api/contexts/Error",
-            "@type" => "Error",
-            "status" => 400,
-            "detail" => "Invalid IRI \"\"."
-        ]);
-    }
-
     private function makeRequest(): array
     {
         return [
             'headers' => [
-                'Content-Type' => 'application/ld+json',
+                'Content-Type' => 'application/merge-patch+json',
             ],
             'json' => [
                 'name' => 'Test Organizer',
@@ -178,11 +151,11 @@ class PostTest extends ApiTestCase
         ];
     }
 
-    private function makeApiCall(array $request): void
+    private function makeApiCall(string $id, array $request): void
     {
         $this->client->request(
-            method: 'POST',
-            url: '/api/organizers',
+            method: 'PATCH',
+            url: sprintf('/api/organizers/%s', $id),
             options: $request
         );
     }
