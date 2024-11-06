@@ -18,11 +18,9 @@ class OrganizerFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $repository = $this->userRepository;
-        $managerIds = $repository->findAllManagerIds();
+        $organizers = $repository->findAllManagers();
 
-        $organizerManagers = $repository->findBy(['id' => $managerIds]);
-
-        foreach ($organizerManagers as $organizerManager) {
+        foreach ($organizers as $organizerManager) {
             OrganizerFactory::createOne([
                 'manager' => $organizerManager,
             ]);

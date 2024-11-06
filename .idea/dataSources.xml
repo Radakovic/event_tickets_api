@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="event_tickets@127.0.0.3" uuid="ac917f1d-66fa-4614-bae7-efb056a5e67c">
+    <data-source source="LOCAL" name="event_tickets@127.0.0.3" uuid="34961562-b475-4481-b60a-4db8a4f7b760">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
+      <remarks>event_tickets_api</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://127.0.0.3:3306/event_tickets</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>

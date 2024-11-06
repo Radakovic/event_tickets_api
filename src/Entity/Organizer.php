@@ -60,12 +60,12 @@ class Organizer
         private string $name,
 
         #[ORM\Column(length: 255)]
-        #[Groups(['get_organizer', 'write_organizer'])]
+        #[Groups(['get_organizer', 'write_organizer', 'get_organizer_events'])]
         #[Assert\NotBlank]
         private string $city,
 
         #[ORM\Column(length: 255)]
-        #[Groups(['get_organizer', 'write_organizer'])]
+        #[Groups(['get_organizer', 'write_organizer', 'get_organizer_events'])]
         #[Assert\NotBlank]
         private string $address,
 
@@ -78,7 +78,7 @@ class Organizer
 
         #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizers')]
         #[JoinColumn(nullable: false)]
-        #[Groups(['get_organizer', 'write_organizer'])]
+        #[Groups(['get_organizer', 'write_organizer', 'get_organizer_events'])]
         #[Assert\NotBlank]
         private ?User $manager = null,
 

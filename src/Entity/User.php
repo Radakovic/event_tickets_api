@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\DataProvider\UserManagersProvider;
 use App\Entity\Traits\CreateAndUpdatedAtTrait;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -16,6 +18,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -24,7 +27,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', hardDelete: false)]
 #[ApiResource(
     operations: [
-        new GetCollection()
+        new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/users_managers',
+            //normalizationContext: ['groups' => ['get_conclusions']],
+            //security: "(is_granted('ROLE_ADMIN'))",
+            provider: UserManagersProvider::class,
+        )
     ],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -34,17 +43,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         #[ORM\Column(type: 'string', length: 255)]
         #[Assert\NotBlank]
         #[Assert\Length(min: 3, max: 255)]
+        #[Groups(['get_organizer_events'])]
         private string $firstName,
 
         #[ORM\Column(type: 'string', length: 255)]
         #[Assert\NotBlank]
         #[Assert\Length(min: 3, max: 255)]
+        #[Groups(['get_organizer_events'])]
         private string $lastName,
 
         #[ORM\Column(type: 'string', length: 180, unique: true)]
         #[Assert\NotBlank]
         #[Assert\Length(max: 255)]
         #[Assert\Email]
+        #[Groups(['get_organizer_events'])]
         private string $email,
 
         #[ORM\Column(type: 'json')]
