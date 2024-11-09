@@ -19,11 +19,9 @@ readonly class UserManagersProvider implements ProviderInterface
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-//        $user = $this->security->getUser();
-//
-//        if (!$user instanceof UserInterface && !$this->security->isGranted('ROLE_ADMIN')) {
-//            return null;
-//        }
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
+            return null;
+        }
 
         return $this->userRepository->findAllManagers();
     }

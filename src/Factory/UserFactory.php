@@ -3,7 +3,7 @@
 namespace App\Factory;
 
 use App\Entity\User;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Service\UserRegistrationServiceInterface;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -16,6 +16,12 @@ final class UserFactory extends PersistentProxyObjectFactory
         'ROLE_MANAGER',
         'ROLE_USER',
     ];
+
+    public function __construct(
+        private readonly UserRegistrationServiceInterface $userRegistrationService,
+    ) {
+        parent::__construct();
+    }
 
     public static function class(): string
     {
