@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['get_organizer_events']],
-            security: "is_granted('ROLE_ADMIN') or is_granted('view', object)",
+            //0security: "is_granted('ROLE_ADMIN') or is_granted('view', object)",
         ),
         new GetCollection(
             //security: "is_granted('ROLE_ADMIN')",
