@@ -17,12 +17,6 @@ final class UserFactory extends PersistentProxyObjectFactory
         'ROLE_USER',
     ];
 
-    public function __construct(
-        private readonly UserRegistrationServiceInterface $userRegistrationService,
-    ) {
-        parent::__construct();
-    }
-
     public static function class(): string
     {
         return User::class;
